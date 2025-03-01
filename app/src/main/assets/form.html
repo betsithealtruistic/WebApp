@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Form</title>
+</head>
+<body>
+<h2>User Information</h2>
+<form id="userForm">
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name"><br><br>
+
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email"><br><br>
+
+    <h3>Capture Image:</h3>
+    <input type="file" id="imageInput" accept="image/*" capture="environment" onchange="convertImageToBase64()">
+
+    <button type="button" onclick="sendDataToAndroid()">Submit</button>
+</form>
+
+<script>
+    var imageBase64 = "";
+
+    function convertImageToBase64() {
+        var file = document.getElementById('imageInput').files[0];
+        var reader = new FileReader();
+        reader.onloadend = function () {
+            imageBase64 = reader.result.replace("data:image/png;base64,", "").replace("data:image/jpeg;base64,", "");
+        };
+        if (file) {
+            reader.readAsDataURL(file);
+        }
+    }
+
+    function sendDataToAndroid() {
+        var name = document.getElementById('name').value;
+        var email = document.getElementById('email').value;
+
+        if (imageBase64) {
+            Android.sendData(name, email, imageBase64);
+        } else {
+            alert("Please select an image");
+        }
+    }
+</script>
+</body>
+</html>
